@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { paginate, toJSON} from "@/models/plugins";
 import {roles} from "@/configs/roles";
 import {z} from "zod";
+import { PaginateResult } from '@/models/plugins/paginate.plugin';
 
 export interface IUser extends mongoose.Document {
     name: string;
@@ -20,7 +21,7 @@ export interface IUserInputDTO {
     role: string;
 }
 
-const userSchemaZod = z.object({
+export const userSchemaZod = z.object({
     name: z.string().min(1, 'Name is required').trim(),
     email: z.string().email('Invalid email').trim().toLowerCase(),
     password: z
@@ -71,7 +72,14 @@ userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
 
 // check if email is unique
-userSchema.statics.isEmailTaken = async function (email: string, excludeUserId: string) {
+
+/**
+ * Check if email is taken
+ * @param {string} email - The email to check
+ * @param {string} excludeUserId - The id of the user to exclude
+ */
+
+userSchema.statics.isEmailTaken = async function (email: string, excludeUserId?: string) {
     // check if the email is taken by another user
     const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
     return !!user;
@@ -94,8 +102,8 @@ userSchema.pre('save', async function (next) {
 });
 
 export interface IUserModel extends mongoose.Model<IUser> {
-    isEmailTaken(email: string, excludeUserId: string): Promise<boolean>;
-    paginate(query: Record<string, string>, options: Record<string, string>): Promise<any>;
+    isEmailTaken(email: string, excludeUserId?: string): Promise<boolean>;
+    paginate(query: Record<string, string>, options: Record<string, string>): Promise<PaginateResult<IUser>>;
 }
 
 /**

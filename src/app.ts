@@ -2,8 +2,8 @@
 import express from 'express'
 import Loaders from '@/loaders';
 import helmet from 'helmet';
-import cors from 'cors';
-import * as process from 'node:process';
+// import cors from 'cors';
+// import * as process from 'node:process';
 import path from 'path';
 import dotenv from 'dotenv';
 import * as console from "node:console";

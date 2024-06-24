@@ -7,7 +7,7 @@ interface PaginateOptions {
     populate?: string;
 }
 
-interface PaginateResult<T extends Document> {
+export interface PaginateResult<T extends Document> {
     results: T[];
     page: number;
     limit: number;

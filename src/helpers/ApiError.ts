@@ -1,3 +1,17 @@
+import { z } from 'zod';
+import { HttpStatusCode, HttpStatusMessage } from '@/helpers/http_status_code';
+
+/**
+ * Class representing an API error.
+ *
+ * @example
+ * throw new ApiError(404, 'User not found');
+ *
+ * @param statusCode - HTTP Status code
+ * @param message - Error message
+ * @param isOperational - Whether the error is operational
+ * @param stack - Error stack trace
+ */
 class ApiError extends Error {
     public statusCode: number;
     public isOperational: boolean;
@@ -9,9 +23,25 @@ class ApiError extends Error {
             this.stack = stack;
         } else {
             // error stack trace
-        Error.captureStackTrace(this, this.constructor);
+            Error.captureStackTrace(this, this.constructor);
         }
   }
+}
+
+export class ZodErrorResponse {
+    constructor(error: any) {
+        if (error instanceof z.ZodError) {
+            throw new ApiError(
+              HttpStatusCode.BadRequest,
+              error.errors.map((err) => err.message).join(', ')
+            );
+        } else {
+            throw new ApiError(
+              HttpStatusCode.InternalServerError,
+              HttpStatusMessage.InternalServerError
+            );
+        }
+    }
 }
 
 export default ApiError;
