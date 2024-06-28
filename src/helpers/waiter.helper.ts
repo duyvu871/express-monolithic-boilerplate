@@ -1,8 +1,7 @@
-import {Request, Response, NextFunction} from "express";
-
+import { Request, Response, NextFunction } from 'express';
 
 class AsyncMiddleware {
-    static async asyncHandler(fn: (req: Request, res: Response, next: NextFunction) => Promise<Response>) {
+    static asyncHandler(fn: (req: Request, res: Response, next: NextFunction) => Promise<void>) {
         return (req: Request, res: Response, next: NextFunction) => {
             fn(req, res, next).catch(next);
         };

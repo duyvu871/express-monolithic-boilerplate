@@ -5,6 +5,7 @@ const AppConfig = {
     app_host: process.env.HOST || 'localhost',
     app_env: process.env.NODE_ENV || 'development',
     app_root: path.resolve(__dirname, '../../'),
+    app_secret: process.env.APP_SECRET || 'secret',
     path: {
         public: path.resolve(__dirname, '../../public'),
     },

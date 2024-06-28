@@ -1,6 +1,6 @@
 import { Model, Schema, Document } from "mongoose";
 
-interface PaginateOptions {
+export interface PaginateOptions {
     page?: string;
     limit?: string;
     sortBy?: string;
@@ -24,6 +24,10 @@ const paginate = (schema: any) => {
      * @param options - options for pagination
      * @param options.page - page number
      * @param options.limit - number of items per page
+     * @param options.sortBy - sort by field
+     * @param options.populate - populate field (comma separated values)
+     * @example { page: 1, limit: 10, sortBy: 'createdAt:desc', populate: 'field1,field2' }
+     * @returns {Promise<PaginateResult<Document>>}
      */
     schema.statics.paginate = async function (query: Record<string, string>, options: PaginateOptions): Promise<PaginateResult<Document>> {
         let sort = '';
@@ -54,6 +58,7 @@ const paginate = (schema: any) => {
 
         // check if the options has a populate field
         if (options.populate) {
+            // EXAMPLE: options.populate = 'field1,field2'
             // split the populate field by comma
             options.populate.split(',').forEach((populateOption: string) => {
                 // populate the field

@@ -25,7 +25,11 @@ class ApiError extends Error {
             // error stack trace
             Error.captureStackTrace(this, this.constructor);
         }
-  }
+    }
+
+    static throw(statusCode: number, message: string) {
+        throw new ApiError(statusCode, message);
+    }
 }
 
 export class ZodErrorResponse {

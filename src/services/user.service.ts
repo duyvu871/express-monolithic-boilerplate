@@ -10,16 +10,12 @@ export default class UserService {
      * @param user - User object
      */
     public async createUser(user: Partial<IUser>) {
-        try {
-            const validate_request_body = userSchemaZod.parse(user);
-            const isEmailExist = await User.isEmailTaken(validate_request_body.email);
-            if (!isEmailExist) {
-                throw new ApiError(HttpStatusCode.BadRequest, 'Email is already taken');
-            }
-            return await User.create(validate_request_body);
-        } catch (error) {
-          return new ZodErrorResponse(error);
+        const validate_request_body = userSchemaZod.parse(user);
+        const isEmailExist = await User.isEmailTaken(validate_request_body.email);
+        if (!isEmailExist) {
+            throw new ApiError(HttpStatusCode.BadRequest, 'Email is already taken');
         }
+        return await User.create(validate_request_body);
     }
     /**
      * Query for users
@@ -33,12 +29,8 @@ export default class UserService {
     public async queryUser(
       query: Record<string, string>,
       options: Record<'sortBy'|'limit'|'page', string>
-    ): Promise<PaginateResult<IUser> | ZodErrorResponse> {
-        try {
-            return await User.paginate(query, options);
-        } catch (error) {
-            return new ZodErrorResponse(error);
-        }
+    ): Promise<PaginateResult<IUser>> {
+        return await User.paginate(query, options);
     }
 
     /**
@@ -46,14 +38,10 @@ export default class UserService {
      * @param {string} userId - User Id
      * @returns {Promise<Query>}
      */
-    public async getUserById(userId: string): Promise<Query<IUser, Document> | ZodErrorResponse>{
-        try {
-            const user = await User.findById(userId);
-            if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
-            return user;
-        } catch (error) {
-            return new ZodErrorResponse(error);
-        }
+    public async getUserById(userId: string): Promise<Query<IUser, Document>>{
+        const user = await User.findById(userId);
+        if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
+        return user;
     }
 
     /**
@@ -61,14 +49,10 @@ export default class UserService {
      * @param {string} userId - User Id
      * @param email
      */
-    public async getUserByEmail(email: string): Promise<Query<IUser, Document> | ZodErrorResponse> {
-        try {
-            const user = await User.findOne({ email });
-            if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
-            return user;
-        } catch (error) {
-            return new ZodErrorResponse(error);
-        }
+    public async getUserByEmail(email: string): Promise<NonNullable<Query<IUser, Document>>> {
+        const user = await User.findOne({ email });
+        if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
+        return user;
     }
 
     /**
@@ -77,16 +61,12 @@ export default class UserService {
      * @param {Object} updateBody - Update object
      * @returns {Promise<User>}
      */
-    public async updateUserById(userId: string, updateBody: Partial<IUser>): Promise<IUser | ZodErrorResponse> {
-        try {
-            const user = await User.findById(userId);
-            if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
-            Object.assign(user, updateBody);
-            await user.save();
-            return user;
-        } catch (error) {
-            return new ZodErrorResponse(error);
-        }
+    public async updateUserById(userId: string, updateBody: Partial<IUser>): Promise<IUser> {
+        const user = await User.findById(userId);
+        if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
+        Object.assign(user, updateBody);
+        await user.save();
+        return user;
     }
 
     /**
@@ -95,13 +75,9 @@ export default class UserService {
      * @returns {Promise<User>}
      */
     public async deleteUserById(userId: string): Promise<IUser | ZodErrorResponse> {
-        try {
-            const user = await User.findById(userId);
-            if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
-            await user.deleteOne();
-            return user;
-        } catch (error) {
-            return new ZodErrorResponse(error);
-        }
+        const user = await User.findById(userId);
+        if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
+        await user.deleteOne();
+        return user;
     }
 }
