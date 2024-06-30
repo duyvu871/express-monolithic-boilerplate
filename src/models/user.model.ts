@@ -15,6 +15,15 @@ export interface IUser extends mongoose.Document<string|ObjectId> {
     isEmailVerified: boolean;
 }
 
+export interface IUserMethods {
+    isPasswordMatch(password: string): Promise<boolean>;
+}
+
+export interface IUserModel extends mongoose.Model<IUser, {}, IUserMethods> {
+    isEmailTaken(email: string, excludeUserId?: string): Promise<boolean>;
+    paginate(query: Record<string, string>, options: PaginateOptions): Promise<PaginateResult<IUser>>;
+}
+
 export interface IUserInputDTO {
     name: string;
     email: string;
@@ -33,7 +42,7 @@ export const userSchemaZod = z.object({
     role: z.enum([roles[0], ...roles.slice(1)]),
 })
 
-const userSchema= new mongoose.Schema<IUser>({
+const userSchema= new mongoose.Schema<IUser, IUserModel, IUserMethods>({
     name: {type: String, required: true, trim: true},
     email: {
         type: String,
@@ -97,14 +106,6 @@ userSchema.pre('save', async function (next) {
     }
     next();
 });
-
-export interface IUserModel extends mongoose.Model<IUser> {
-    isEmailTaken(email: string, excludeUserId?: string): Promise<boolean>;
-    paginate(query: Record<string, string>, options: PaginateOptions): Promise<PaginateResult<IUser>>;
-    // methods: {
-    //     isPasswordMatch(password: string): Promise<boolean>;
-    // }
-}
 
 /**
  * @typedef User

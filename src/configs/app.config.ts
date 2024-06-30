@@ -8,6 +8,7 @@ const AppConfig = {
     app_secret: process.env.APP_SECRET || 'secret',
     path: {
         public: path.resolve(__dirname, '../../public'),
+        storage: path.resolve(__dirname, '../../storage'),
     },
     api: {
         prefix: '/api/v1',

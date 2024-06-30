@@ -7,13 +7,9 @@ import tokenTypes from '@/configs/tokens';
 import UserService from '@/services/user.service';
 import AppConfig from '@/configs/app.config';
 import env from '@/configs/env';
+import { ObjectId } from 'mongoose';
 
 export default class TokenService {
-		private userService: UserService;
-		constructor() {
-				this.userService = new UserService();
-		}
-
 		/**
 		 * Generate token
 		 * @example
@@ -24,14 +20,16 @@ export default class TokenService {
 		 * @param {string} [secret]
 		 * @returns {string}
 		 */
-		public generateToken(userId: string, expires: number, type: string, secret: string = AppConfig.app_secret): string {
-			const payload = {
-				userId,
-				type,
+		static generateToken(userId: string| ObjectId, expires: number, type: string, secret: string = AppConfig.app_secret): string {
+			const payloadData = {
+				payload: {
+					userId: userId.toString(),
+					type,
+				},
 				exp: moment().add(expires, 'minutes').unix(),
 				iat: moment().unix(),
 			};
-			return jwt.sign(payload, secret);
+			return jwt.sign(payloadData, secret);
 		}
 
 	/**
@@ -43,10 +41,10 @@ export default class TokenService {
 	 * @param {boolean} [blacklisted]
 	 * @returns {Promise<IToken>}
 	 */
-	public async saveToken(token: string, userId: string, expires: number, type: string, blacklisted: boolean = false): Promise<ITokenDTO | ZodErrorResponse> {
+	static async saveToken(token: string, userId: string|ObjectId, expires: number, type: string, blacklisted: boolean = false): Promise<ITokenDTO | ZodErrorResponse> {
 		const tokenData = {
 				token,
-				user: userId,
+				user: userId.toString(),
 				type,
 				expires: moment().add(expires, 'minutes').toDate(),
 				blacklisted,
@@ -60,10 +58,10 @@ export default class TokenService {
 	 * @param {string} [secret]
 	 * @returns {Promise<IToken>}
 	 */
-	public async verifyToken(token: string, secret: string = AppConfig.app_secret): Promise<ITokenDTO> {
-		const payload = jwt.verify(token, secret) as ITokenDTO;
-		if (!payload) throw new ApiError(HttpStatusCode.Unauthorized, HttpStatusMessage.Unauthorized);
-		const tokenDoc = await Token.findOne({ token, type: payload.type, user: payload.user});
+	static async verifyToken(token: string, secret: string = AppConfig.app_secret): Promise<ITokenDTO> {
+		const jwtVerified = jwt.verify(token, secret) as { payload: { userId: string, type: string }, iat: number, exp: number };
+		if (!jwtVerified) throw new ApiError(HttpStatusCode.Unauthorized, HttpStatusMessage.Unauthorized);
+		const tokenDoc = await Token.findOne({ token, type: jwtVerified.payload.type, user: jwtVerified.payload.userId});
 		if (!tokenDoc) throw new ApiError(HttpStatusCode.NotFound, "Token not found");
 		return tokenDoc;
 	}
@@ -73,7 +71,7 @@ export default class TokenService {
 	 * @param {string} token
 	 * @returns {Promise<number>}
 	 */
-	public async invalidateToken(token: string): Promise<number> {
+	static async invalidateToken(token: string): Promise<number> {
 		return (await Token.updateOne({ token }, { blacklisted: true }).exec()).modifiedCount;
 	}
 
@@ -82,22 +80,22 @@ export default class TokenService {
 	 * @param {string} token
 	 * @returns {Promise<number>}
 	 */
-	public async deleteToken(token: string): Promise<number> {
+	static async deleteToken(token: string): Promise<number> {
 		return (await Token.deleteOne({ token }).exec()).deletedCount;
 	}
 
-	public async generateRefreshToken(userId: string): Promise<string> {
-		const token = this.generateToken(userId, parseInt(env.JWT_REFRESH_EXPIRATION), tokenTypes.REFRESH ,env.JWT_SECRET_KEY);
-		await this.saveToken(token, userId,parseInt(env.JWT_REFRESH_EXPIRATION), tokenTypes.REFRESH, false);
+	static async generateRefreshToken(userId: string | ObjectId): Promise<string> {
+		const token = this.generateToken(userId, parseInt(env.JWT_REFRESH_EXPIRATION), tokenTypes.REFRESH, env.JWT_SECRET_KEY);
+		await this.saveToken(token, userId, parseInt(env.JWT_REFRESH_EXPIRATION), tokenTypes.REFRESH, false);
 		return token;
 	}
 
-	public async generateAccessToken(userId: string): Promise<string> {
+	static async generateAccessToken(userId: string | ObjectId): Promise<string> {
 		return this.generateToken(userId, parseInt(env.JWT_EXPIRATION), tokenTypes.ACCESS, env.JWT_SECRET_KEY);
 	}
 
-	public async generateResetPasswordToken(email: string): Promise<string> {
-		const user = (await this.userService.getUserByEmail(email));
+	static async generateResetPasswordToken(email: string): Promise<string> {
+		const user = (await UserService.getUserByEmail(email));
 		const userId = (user?._id ?? '').toString();
 		if (!userId) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
 		const latestToken = await Token.findOne({ user: userId, type: tokenTypes.RESET_PASSWORD}).sort({ createdAt: -1 }).limit(1).exec()
@@ -112,13 +110,13 @@ export default class TokenService {
 		return token;
 	}
 
-	public async generateVerifyEmailToken(userId: string): Promise<string> {
+	static async generateVerifyEmailToken(userId: string): Promise<string> {
 		const token = this.generateToken(userId, parseInt(env.JWT_EMAIL_EXPIRATION), tokenTypes.VERIFY_EMAIL, env.JWT_SECRET_KEY);
 		await this.saveToken(token, userId, parseInt(env.JWT_EMAIL_EXPIRATION), tokenTypes.VERIFY_EMAIL, false);
 		return token;
 	}
 
-	public async generateAuthTokens(userId: string): Promise<{accessToken: string, refreshToken: string}> {
+	static async generateAuthTokens(userId: string | ObjectId): Promise<{accessToken: string, refreshToken: string}> {
 		const accessToken = await this.generateAccessToken(userId);
 		const refreshToken = await this.generateRefreshToken(userId);
 		return { accessToken, refreshToken };

@@ -1,21 +1,24 @@
 import { HttpStatusCode } from '@/helpers/http_status_code';
-import User, { IUser, userSchemaZod } from '@/models/user.model';
+import User, { IUser, IUserInputDTO, IUserMethods, IUserModel, userSchemaZod } from '@/models/user.model';
 import ApiError, { ZodErrorResponse } from '@/helpers/ApiError';
 import { PaginateResult } from '@/models/plugins/paginate.plugin';
-import { Document, Query } from 'mongoose';
+import { Document, ObjectId, Query } from 'mongoose';
+import { MakeManyOptional } from '@/types/helper';
+
+export type UserServiceResponse = NonNullable<IUser & IUserMethods>
 
 export default class UserService {
     /**
      * Create a new user
      * @param user - User object
      */
-    public async createUser(user: Partial<IUser>) {
-        const validate_request_body = userSchemaZod.parse(user);
+    static async createUser(user: MakeManyOptional<IUserInputDTO, 'role'>) {
+        const validate_request_body = user //userSchemaZod.parse(user);
         const isEmailExist = await User.isEmailTaken(validate_request_body.email);
-        if (!isEmailExist) {
+        if (isEmailExist) {
             throw new ApiError(HttpStatusCode.BadRequest, 'Email is already taken');
         }
-        return await User.create(validate_request_body);
+        return await User.create({ ...validate_request_body });
     }
     /**
      * Query for users
@@ -26,7 +29,7 @@ export default class UserService {
      * @param {number} [options.page] - Current page (default = 1)
      * @returns {Promise<QueryResult>}
      */
-    public async queryUser(
+    static async queryUser(
       query: Record<string, string>,
       options: Record<'sortBy'|'limit'|'page', string>
     ): Promise<PaginateResult<IUser>> {
@@ -38,7 +41,7 @@ export default class UserService {
      * @param {string} userId - User Id
      * @returns {Promise<Query>}
      */
-    public async getUserById(userId: string): Promise<Query<IUser, Document>>{
+    static async getUserById(userId: string|ObjectId): Promise<UserServiceResponse>{
         const user = await User.findById(userId);
         if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
         return user;
@@ -49,9 +52,9 @@ export default class UserService {
      * @param {string} userId - User Id
      * @param email
      */
-    public async getUserByEmail(email: string): Promise<NonNullable<Query<IUser, Document>>> {
+    static async getUserByEmail(email: string): Promise<UserServiceResponse> {
         const user = await User.findOne({ email });
-        if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
+        if (!user) throw new ApiError(HttpStatusCode.NotFound, 'Email incorrect');
         return user;
     }
 
@@ -61,7 +64,7 @@ export default class UserService {
      * @param {Object} updateBody - Update object
      * @returns {Promise<User>}
      */
-    public async updateUserById(userId: string, updateBody: Partial<IUser>): Promise<IUser> {
+    static async updateUserById(userId: string, updateBody: Partial<IUser>): Promise<UserServiceResponse> {
         const user = await User.findById(userId);
         if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
         Object.assign(user, updateBody);
@@ -74,7 +77,7 @@ export default class UserService {
      * @param {string} userId - User Id
      * @returns {Promise<User>}
      */
-    public async deleteUserById(userId: string): Promise<IUser | ZodErrorResponse> {
+    static async deleteUserById(userId: string): Promise<UserServiceResponse> {
         const user = await User.findById(userId);
         if (!user) throw new ApiError(HttpStatusCode.NotFound, 'User not found');
         await user.deleteOne();

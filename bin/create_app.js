@@ -55,7 +55,6 @@ try {
 }
 
 // Set up the app
-
 async function setup() {
     try {
         // Clone the repository
@@ -98,3 +97,5 @@ async function setup() {
         process.exit(1);
     }
 }
+
+setup();
