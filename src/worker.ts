@@ -40,6 +40,8 @@ const workerQueue = new Worker('background_task', workerHandler, {
 	connection: {
 		host: process.env.REDIS_HOST,
 		port: parseInt(process.env.REDIS_PORT as string),
+		password: process.env.REDIS_PASSWORD,
+		username: process.env.REDIS_USERNAME,
 	},
 	autorun: true,
 });

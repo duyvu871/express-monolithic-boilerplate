@@ -19,6 +19,8 @@ export default class BackgroundTaskService {
 				connection: {
 					host: env.REDIS_HOST,
 					port: parseInt(env.REDIS_PORT),
+					password: env.REDIS_PASSWORD,
+					username: env.REDIS_USERNAME,
 				},
 			});
 		}
