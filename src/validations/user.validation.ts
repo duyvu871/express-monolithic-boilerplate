@@ -14,7 +14,7 @@ export default class UserValidation {
 				.startsWith('Bearer ', 'Authorization header must start with "Bearer "'),
 		});
 		static createUserBody = z.object({
-			name: z.string().min(1, 'Name is required').trim(),
+			username: z.string().min(1, 'Name is required').trim(),
 			email: z.string().email('Invalid email').trim().toLowerCase(),
 			password: z
 				.string()

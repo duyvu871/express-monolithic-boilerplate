@@ -43,6 +43,9 @@ const mongoLoader = async () => {
 	// return new DataBaseService();
 	return await mongoose.connect(`${env.MONGODB_URI}/${env.MONGODB_DB_NAME}`).then((res) => {
 		console.log("UserDB is connected");
+		process.on('exit', () => {
+			mongoose.disconnect();
+		});
 	}).catch((err) => {
 		console.log(err.message)
 		console.error("UserDB is not connected");

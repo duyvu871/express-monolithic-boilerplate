@@ -23,6 +23,7 @@ export default class UserController {
 			data: users
 		});
 	});
+
 	//update user
 	// static updateUser = AsyncMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 	// 	const updateUserReqZod = zod.object({

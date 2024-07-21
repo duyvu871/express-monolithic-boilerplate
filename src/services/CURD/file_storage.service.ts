@@ -1,5 +1,8 @@
 import fs from 'fs';
-import ffmpeg from 'fluent-ffmpeg';
+import ffmpeg, {ffprobe} from 'fluent-ffmpeg';
+import { path as ffprobePath } from '@ffprobe-installer/ffprobe'
+
+ffmpeg.setFfprobePath(ffprobePath);
 
 export default class FileStorageService {
 	// handle file error
@@ -20,7 +23,6 @@ export default class FileStorageService {
 		} else {
 			resolve(true);
 		}
-
 	}
 	// create directory
 	public static async create_directory(directory_name: string) {
@@ -75,8 +77,41 @@ export default class FileStorageService {
 	}
 	// convert to wav
 	public static async convert_to_wav(file_name: string) {
-			// logic here
+			const file = ffmpeg(file_name);
+			const output_file = file_name.replace('.mp3', '.wav');
+			return await new Promise((resolve, reject) => {
+				file
+					.inputFormat('mp3')
+					.audioCodec('pcm_s16le')
+					.format('wav')
+					.save(output_file)
+					.on('end', () => {
+						resolve(true);
+					})
+					.on('error', (err) => {
+						reject(false);
+					}).run();
+			});
 	}
+	//convert mp3 to any format
+public static async convert_to_flac(file_name: string) {
+	const file = ffmpeg(file_name);
+	const output_file = file_name.replace('.mp3', '.flac');
+	return await new Promise((resolve, reject) => {
+		file
+			.inputFormat('mp3')
+			.audioCodec('flac')
+			.format('flac')
+			.save(output_file)
+			.on('end', () => {
+				resolve(true);
+			})
+			.on('error', (err) => {
+				reject(false);
+			}).run();
+	});
+
+}
 	// cut audio
 	public static async cut_audio(file_name: string, start_time: number, duration: number) {
 		const file = ffmpeg(file_name);
@@ -86,7 +121,7 @@ export default class FileStorageService {
 			throw new Error('Duration time is greater than file duration');
 		}
 		const output_file = file_name.replace('.mp3', `/_${start_time}_${duration}.mp3`);
-		await new Promise((resolve, reject) => {
+		return await new Promise((resolve, reject) => {
 			file
 				.setStartTime(start_time)
 				.setDuration(duration)
@@ -101,7 +136,7 @@ export default class FileStorageService {
 	// get audio duration
 	public static async get_audio_duration(filePath: string) {
 		return new Promise((resolve, reject) => {
-			ffmpeg.ffprobe(filePath, (err, metadata) => {
+			ffprobe(filePath, (err, metadata) => {
 				if (err) {
 					reject(err);
 				} else {

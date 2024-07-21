@@ -6,64 +6,104 @@
     "auditLog": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\.41fc70a1c2cd4afd58ec745444435c348992872b-audit.json",
     "files": [
         {
-            "date": 1719594906647,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-29-00.log",
-            "hash": "85d328d1521ab21d30b0198d2e4ef664d39962d29729193dcbaad1646bc5df1c"
+            "date": 1720509324631,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-09-14.log",
+            "hash": "0483f1ad18ee756c5a1df731c9942432afd9b94238326b8335bed30f54215721"
         },
         {
-            "date": 1719597718300,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-29-01.log",
-            "hash": "16b53458ad5e20bf7590516c148aa36a34518177adb7827ea1d591866629275a"
+            "date": 1720538048505,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-09-22.log",
+            "hash": "741dd93668254040b2d800a10d1c837ec3729dc681e616c1dd0694b05aca7c5d"
         },
         {
-            "date": 1719604656471,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-29-02.log",
-            "hash": "5649eea27d1aae6ff0cd258975931fb38476b374e8519cf7da5b02dfaf4e681b"
+            "date": 1720581980195,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-10-10.log",
+            "hash": "1a0a2a1bdec9fba7f8820bcbb67ba7815e5ba27f1fb7b341f129f4865bade82c"
         },
         {
-            "date": 1719604881878,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-29-03.log",
-            "hash": "3672d6cf7732049c7a7e8e62de30fc55b4f45e8f8f43039871ed4299ccf2328b"
+            "date": 1720587127553,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-10-11.log",
+            "hash": "e67b597cafb492b40f077471a7046881d7489a2c386e43a129389fc258c208bc"
         },
         {
-            "date": 1719617178485,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-29-06.log",
-            "hash": "48d3bdff8cec49e5b8f90ce0232a6a0390a6851f5a5e3c45052c0b62c0f9c00e"
+            "date": 1720587815156,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-10-12.log",
+            "hash": "bf4207042ca7939982fc58ff6aab213f59407531779d2e63635f550c08b9032d"
         },
         {
-            "date": 1719619533517,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-29-07.log",
-            "hash": "a4b775368fdca101ebff86cd1942bb93688e821b89789e45e0c8badfdb6f08f9"
+            "date": 1720609705006,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-10-18.log",
+            "hash": "4d9c3bd7fc1768cc1040406212f820eeffb933f2ee2d79bd9adf9da030f3e680"
         },
         {
-            "date": 1719622802612,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-29-08.log",
-            "hash": "fe3f4b2f38ad77f4011cc60e5270a9ab189a7bd540c699317e0ad986a2f8c5ba"
+            "date": 1720668520206,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-11-10.log",
+            "hash": "faf5daa31705414376e815a20eaac0b06862745b83c53a2a02c352c585eac4f9"
         },
         {
-            "date": 1719626455775,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-29-09.log",
-            "hash": "fbfdd5afe2f9ec0d2098d46129321e7aad952e89c1ba4a3b4614410903fd498f"
+            "date": 1720670402189,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-11-11.log",
+            "hash": "40d6277c3f1e8039016eb01b1057b4e9e96c4c28d44055ff97ab6ebcc30ee641"
         },
         {
-            "date": 1719687771577,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-30-02.log",
-            "hash": "9bb5014a898fa36a83a89b9e22931bc72e9838185e5569edf442020618172679"
+            "date": 1720711382318,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-11-22.log",
+            "hash": "3fee557c37a335fa283a7bd4a814b533ae30c51a5d6fa11cc10bb0bceb099599"
         },
         {
-            "date": 1719692634435,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-30-03.log",
-            "hash": "2194b6d3bc22a86df3782becc57229990f88ee5e3c9bb354a696f01929340469"
+            "date": 1720754254885,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-12-10.log",
+            "hash": "e2d067dec39df86d4efc786a8e7400f934c724aac3088b42fb47efae17abbd0b"
         },
         {
-            "date": 1719704082498,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-30-06.log",
-            "hash": "76bf449b7749918c6a83dcecb25c7d6b7a44d588af934c7af5029262dd54fd1e"
+            "date": 1720792869390,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-12-21.log",
+            "hash": "8b63cc61aa697a38352e6dd1d8485e95f06574b81c3130510d39f13a481cda0e"
         },
         {
-            "date": 1719705796171,
-            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-06-30-07.log",
-            "hash": "81de4d68440641d43c740bfa58088fcbc8a7d85e552686d5c3184a16ed47f1f1"
+            "date": 1721278730944,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-18-11.log",
+            "hash": "a6ae3f2dac3f08742b2ba78eaf4bc53e584ec60d8698c37f2b139000bc59bf8f"
+        },
+        {
+            "date": 1721278900967,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-18-12.log",
+            "hash": "b259c929793b246847bf0cab4d38aa4bf2557e739cf4ef9305994228019ad0cb"
+        },
+        {
+            "date": 1721285455775,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-18-13.log",
+            "hash": "f2be57489e16ff94abb45d8c7e511c573a3a5118857fc40db423d8ad42515b09"
+        },
+        {
+            "date": 1721286024026,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-18-14.log",
+            "hash": "bcdc055a58a831763e1f27d5f05762bb6c4488b467e8e43f9fcc5f5e9484bce9"
+        },
+        {
+            "date": 1721292335919,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-18-15.log",
+            "hash": "24ec655dfc56e2e098c82b5eabc6dfe60becd390968d42559a28eaa094c87a91"
+        },
+        {
+            "date": 1721293516193,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-18-16.log",
+            "hash": "e177fa88d83ce8c3e5147e116d8f126ea80800ed5ee8830bdae3fa2a353b9c23"
+        },
+        {
+            "date": 1721334685572,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-19-03.log",
+            "hash": "07a1e800fa1bc37747f51d21d260f3f007dcb609f3836b5a039a4a4e3bb194ad"
+        },
+        {
+            "date": 1721371047198,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-19-13.log",
+            "hash": "32c29c298b02a401997fb773e6ec8f65fce52cdd1c07b34384d5266b671c3a37"
+        },
+        {
+            "date": 1721550137548,
+            "name": "F:\\CODE\\express-monolithic-boilerplate\\storage\\Log\\log-2024-07-21-15.log",
+            "hash": "8be03d521644a0d9736b984e2e420996fa68ebaae01b2d20d63e2d6346b0de96"
         }
     ],
     "hashType": "sha256"

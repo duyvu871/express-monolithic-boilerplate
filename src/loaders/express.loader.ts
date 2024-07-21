@@ -22,7 +22,9 @@ export default ({app}: {app: Express}) => {
     }); // server health check
 
     app.enable('trust proxy'); // trust first proxy
-    app.use(cors({})); // enable cors
+    app.use(cors({
+        origin: "*",
+    })); // enable cors
     app.use(bodyParser.json({
         limit: '10mb'
     })); // parse application/json
@@ -32,6 +34,7 @@ export default ({app}: {app: Express}) => {
     app.use(bodyParser.text()); // parse text/plain
     app.use(cookieParser()); // parse cookies
     app.use(flash()); // flash messages
-    app.use(express.static(AppConfig.path.public)); // serve static files
+    app.use('/storage', express.static(AppConfig.path.storage)); // serve static files
+    console.log(AppConfig.path.storage);
     LoadRoutes({app}); // load routes
 };

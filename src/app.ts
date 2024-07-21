@@ -6,21 +6,21 @@ import path from 'path';
 import dotenv from 'dotenv';
 import * as console from "node:console";
 import AppConfig from "@/configs/app.config";
-import env from '@/configs/env';
 
 async function startServer() {
     const listenPort = AppConfig.app_port;
-    const isProduction = env.NODE_ENV === 'production';
+    const isProduction = process.env.NODE_ENV === 'production';
     console.log(`environment: ${process.env.NODE_ENV}`);
     const app = express();
-    dotenv.config({
+    const DOTENV = dotenv.config({
         path: path.resolve(__dirname, isProduction ? '../.env' : '../.env')
     }); // Load environment variables from .env file
-    app.use(helmet()); // Secure your app by setting various HTTP headers
-    Loaders({ expressApp: app }).then(() => {
-        app.listen(listenPort, () => {
-            console.log(`Server is running on http://localhost:${listenPort}`);
-        });
+    app.use(helmet({
+        crossOriginResourcePolicy: false,
+    })); // Secure your app by setting various HTTP headers
+    Loaders({ expressApp: app });
+    app.listen(listenPort, () => {
+        console.log(`Server is running on http://localhost:${listenPort}`);
     });
 }
 

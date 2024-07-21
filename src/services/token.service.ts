@@ -26,10 +26,10 @@ export default class TokenService {
 					userId: userId.toString(),
 					type,
 				},
-				exp: moment().add(expires, 'minutes').unix(),
+				// exp: moment().add(expires, 'minutes').unix(),
 				iat: moment().unix(),
 			};
-			return jwt.sign(payloadData, secret);
+			return jwt.sign(payloadData, secret, {expiresIn: expires, algorithm: 'HS256'});
 		}
 
 	/**
@@ -59,9 +59,13 @@ export default class TokenService {
 	 * @returns {Promise<IToken>}
 	 */
 	static async verifyToken(token: string, secret: string = AppConfig.app_secret): Promise<ITokenDTO> {
-		const jwtVerified = jwt.verify(token, secret) as { payload: { userId: string, type: string }, iat: number, exp: number };
-		if (!jwtVerified) throw new ApiError(HttpStatusCode.Unauthorized, HttpStatusMessage.Unauthorized);
-		const tokenDoc = await Token.findOne({ token, type: jwtVerified.payload.type, user: jwtVerified.payload.userId});
+		const decodeJWT = jwt.decode(token) as { payload: { userId: string, type: string }, iat: number, exp: number };
+		if (!(decodeJWT.exp && moment().isAfter(moment(decodeJWT.exp)))) {
+			throw new ApiError(HttpStatusCode.Unauthorized, HttpStatusMessage.Unauthorized);
+		}
+		// const jwtVerified = jwt.verify(token, secret) as { payload: { userId: string, type: string }, iat: number, exp: number };
+		// if (!jwtVerified) throw new ApiError(HttpStatusCode.Unauthorized, HttpStatusMessage.Unauthorized);
+		const tokenDoc = await Token.findOne({ token, type: decodeJWT.payload.type, user: decodeJWT.payload.userId});
 		if (!tokenDoc) throw new ApiError(HttpStatusCode.NotFound, "Token not found");
 		return tokenDoc;
 	}
@@ -91,7 +95,9 @@ export default class TokenService {
 	}
 
 	static async generateAccessToken(userId: string | ObjectId): Promise<string> {
-		return this.generateToken(userId, parseInt(env.JWT_EXPIRATION), tokenTypes.ACCESS, env.JWT_SECRET_KEY);
+		const token = this.generateToken(userId, parseInt(env.JWT_EXPIRATION), tokenTypes.ACCESS, env.JWT_SECRET_KEY);
+		await this.saveToken(token, userId, parseInt(env.JWT_EXPIRATION), tokenTypes.ACCESS, false);
+		return token;
 	}
 
 	static async generateResetPasswordToken(email: string): Promise<string> {

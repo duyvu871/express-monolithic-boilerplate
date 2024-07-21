@@ -1,29 +1,31 @@
-import {Queue} from 'bullmq';
+import { Job, Queue } from 'bullmq';
 import env from '@/configs/env';
 
+type queue_name = 'background_task' | 'audio_handle_queue' | 'example_task';
+
 export default class BackgroundTaskService {
+	public static DEFAULT_REMOVE_CONFIG = {
+		removeOnComplete: {
+			age: 3600, // 1 hour
+		},
+		removeOnFail: {
+			age: 24 * 3600, // 24 hours
+		},
+	};
 	private static queue: Queue;
-	public static async get_queue() {
+	public static get_queue(queue_name: queue_name = 'background_task'): Queue {
 		if (!this.queue) {
-			this.queue = new Queue('background_task', {
+			this.queue = new Queue(queue_name, {
 				connection: {
 					host: env.REDIS_HOST,
 					port: parseInt(env.REDIS_PORT),
-				}
+				},
 			});
 		}
+
 		return this.queue;
 	}
-	public static async add_task(name: string, data: any) {
-		const queue = await this.get_queue();
-		await queue.add(name, data);
-	}
-	public static async add_task_callback(name: string, data: any, callback: (data: any) => void) {
-		const queue = await this.get_queue();
-		await queue.add(name, data).then(callback);
-	}
-	public static async retry_task(jobId: string) {
-		const queue = await this.get_queue();
-		await queue.getJob(jobId).then(job => job?.retry());
+	public static add_task<T>(queue_name: queue_name,task_name: string, data: T): Promise<Job<T>> {
+		return this.get_queue(queue_name).add(task_name, data, this.DEFAULT_REMOVE_CONFIG);
 	}
 }

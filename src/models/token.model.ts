@@ -34,7 +34,7 @@ export const tokenSchemaZod = z.object({
 const tokenSchema = new mongoose.Schema<IToken>({
     token: { type: String, required: true, index: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    type: { type: String, required: true, enum: [Tokens.REFRESH, Tokens.RESET_PASSWORD, Tokens.VERIFY_EMAIL]},
+    type: { type: String, required: true, enum: [Tokens.REFRESH, Tokens.RESET_PASSWORD, Tokens.VERIFY_EMAIL, Tokens.ACCESS]},
     expires: { type: Date, required: true },
     blacklisted: { type: Boolean, default: false}
 }, {

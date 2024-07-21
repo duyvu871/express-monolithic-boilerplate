@@ -1,10 +1,5 @@
-import multer, { FileFilterCallback } from 'multer';
+import multer, { DiskStorageOptions, FileFilterCallback } from 'multer';
 import { Request } from 'express'; // For custom file filtering
-
-// Define interface for uploaded file
-interface IUploadFile {
-	[fieldname: string]: Express.Multer.File[];
-}
 
 // Set up storage options
 const storage = multer.diskStorage({
@@ -55,9 +50,54 @@ const fileFilter = (
 const upload = multer({
 	// storage: storage, // Use the configured storage
 	limits: {
-		fileSize: 1024 * 1024 * 5, // 5MB file size limit
+		fileSize: 1024 * 1024 * 100, // 100MB file size limit
 	},
 	fileFilter: fileFilter, // Apply file type filter
 });
 
-export default upload;
+enum FilterMessage {
+	mimetype = "Invalid mimeType",
+	originalname = "Invalid original filename",
+	encoding = "Invalid file encoding",
+	size = "File size too large",
+	destination = "Invalid file destination",
+	path = "Invalid file path",
+	filename = "Invalid filename defined"
+}
+
+const uploadMiddleware = (
+	filter?: {
+		mimetype?: RegExp;
+		originalname?: RegExp;
+		encoding?: RegExp;
+		size?: RegExp;
+		destination?: RegExp;
+		path?: RegExp;
+		filename?: RegExp;
+	},
+	optionLimit?: multer.Options['limits'],
+	storageOptions?: Partial<DiskStorageOptions>
+) => {
+	const multerOption: multer.Options = {}
+	if (optionLimit) multerOption.limits = optionLimit;
+	if (storageOptions) multerOption.storage = multer.diskStorage(storageOptions);
+	if (filter) multerOption.fileFilter = (
+		req: Request,
+		file: Express.Multer.File,
+		cb: FileFilterCallback
+	) => {
+		// Check file type
+		Object.keys(filter).forEach((key, index) => {
+			const keyBinding = key as keyof typeof FilterMessage;
+			const keyContent = file[keyBinding];
+			if (keyContent && !filter[keyBinding]?.test(keyContent.toString())) {
+				cb(null, false);
+				cb(new Error(FilterMessage[keyBinding]));
+			}
+		});
+		cb(null, true);
+	};
+	return multer(multerOption)
+}
+
+export default uploadMiddleware;
