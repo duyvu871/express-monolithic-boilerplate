@@ -13,6 +13,7 @@
     "start:dev": "set NODE_ENV=development&&nodemon --ignore storage -r tsconfig-paths/register ./src/app.ts",
     "start:prod": "set NODE_ENV=production&&node --ignore storage -r tsconfig-paths/register ./dist/app.js"
   },
+  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
