@@ -5,15 +5,15 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode production",
+    "build": "tspc",
     "start:product": "node dist/app.js",
     "worker:product": "node dist/worker.js",
     "start": "set NODE_ENV=development&&set PORT=3001&&node -r tsconfig-paths/register -r ts-node/register ./src/app.ts",
     "worker": "set NODE_ENV=development&&node -r tsconfig-paths/register -r ts-node/register ./src/worker.ts",
     "start:dev": "set NODE_ENV=development&&nodemon --ignore storage -r tsconfig-paths/register ./src/app.ts",
-    "start:prod": "set NODE_ENV=production&&node --ignore storage -r tsconfig-paths/register ./dist/app.js"
+    "start:prod": "set NODE_ENV=production&&node --ignore storage -r tsconfig-paths/register ./dist/app.js",
+    "exec": "node ./dist/app.js"
   },
-  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -60,8 +60,12 @@
     "@types/validator": "^13.12.0",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.4",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
+    "ts-patch": "^3.2.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "typescript-transform-paths": "^3.4.7",
+    "webpack-cli": "^5.1.4"
   }
 }
