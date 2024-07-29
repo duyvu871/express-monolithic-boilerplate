@@ -2,6 +2,9 @@ import * as mongoose from "mongoose";
 import { toJSON } from "@/models/plugins";
 import Tokens from "@/configs/tokens";
 import { z } from 'zod';
+import env from '@/configs/env';
+
+const connection = mongoose;
 
 export interface IToken extends mongoose.Document {
     token: string;
@@ -43,6 +46,6 @@ const tokenSchema = new mongoose.Schema<IToken>({
 
 tokenSchema.plugin(toJSON);
 
-const Token = mongoose.model<IToken>('Token', tokenSchema);
+const Token = connection.model<IToken, ITokenModel>('Token', tokenSchema, env.MONGODB_DB_NAME);
 
 export default Token;

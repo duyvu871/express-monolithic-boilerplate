@@ -1,4 +1,5 @@
 import { Job, Worker } from 'bullmq';
+import Redis from 'ioredis';
 // import env from '@/configs/env';
 import {handleHeavyTask} from '@/tasks/example_task';
 import { ConvertToWavJob, SpeechToTextJob, WorkerJob } from '@/services/queue/utils';
@@ -6,10 +7,13 @@ import * as process from 'node:process';
 import dotenv from 'dotenv';
 import { ConvertToWavTask } from '@/tasks/convert_to_wav';
 import SpeechToText from '@/tasks/speech_to_text';
+import { loadEnv } from '@/configs/env';
 
-dotenv.config({
+const DOTENV = dotenv.config({
 	path: process.cwd() + '/.env',
 });
+
+loadEnv(DOTENV.parsed);
 
 export async function workerProcessor(taskName: string ,data: Promise<any>, job: Job){
 		await job.updateProgress(0);
@@ -36,13 +40,16 @@ export async function workerHandler(job: Job<WorkerJob>){
 	}
 }
 
+const redisInstance = new Redis({
+	host: process.env.REDIS_HOST,
+	port: parseInt(process.env.REDIS_PORT as string),
+	password: process.env.REDIS_PASSWORD,
+	username: process.env.REDIS_USERNAME,
+	maxRetriesPerRequest: null,
+});
+
 const workerQueue = new Worker('background_task', workerHandler, {
-	connection: {
-		host: process.env.REDIS_HOST,
-		port: parseInt(process.env.REDIS_PORT as string),
-		password: process.env.REDIS_PASSWORD,
-		username: process.env.REDIS_USERNAME,
-	},
+	connection: redisInstance,
 	autorun: true,
 });
 

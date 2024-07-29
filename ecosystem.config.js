@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
         {
-            name: 'app',
+            name: 'connected-brain',
             script: 'set PORT=3000&&start:product&&worker:product',
             watch: '.',
             env: {

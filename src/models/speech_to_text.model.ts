@@ -2,6 +2,9 @@ import { Document, ObjectId, Schema } from 'mongoose';
 import mongoose from 'mongoose';
 import { toJSON } from '@/models/plugins';
 import { TranscriptSentence } from 'assemblyai';
+import env from '@/configs/env';
+
+const connection = mongoose;
 
 export interface IS2t extends mongoose.Document<string|ObjectId>, IS2tDTO {}
 
@@ -64,6 +67,6 @@ S2tSchema.pre('save', function(next) {
 	next();
 });
 
-const S2t = mongoose.model<IS2t, IS2tModel>('SpeechToText', S2tSchema);
+const S2t = connection.model<IS2t, IS2tModel>('SpeechToText', S2tSchema, env.MONGODB_DB_NAME);
 
 export default S2t;

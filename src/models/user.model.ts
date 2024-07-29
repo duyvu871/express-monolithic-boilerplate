@@ -6,8 +6,6 @@ import { roles } from '@/configs/roles';
 import { z } from 'zod';
 import { PaginateOptions, PaginateResult } from './plugins/paginate.plugin';
 
-// Define interfaces for better type checking
-
 interface BankingInfo {
 	bank: string;
 	accountNumber: string;
@@ -136,6 +134,7 @@ const userSchema = new Schema<IUserDocument, IUserModel>(
 	},
 	{
 		timestamps: true,
+		collection: 'users',
 	}
 );
 
@@ -163,6 +162,7 @@ userSchema.pre('save', async function (next) {
 	}
 	next();
 });
+
 
 const User = mongoose.model<IUserDocument, IUserModel>('User', userSchema);
 
