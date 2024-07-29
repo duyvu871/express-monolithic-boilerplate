@@ -11,9 +11,9 @@ import * as process from 'node:process';
 import { morganMiddleware } from '@/configs/morgan';
 
 export default ({app}: {app: Express}) => {
-    if (process.env.NODE_ENV === 'development') {
+    // if (process.env.NODE_ENV === 'development') {
         app.use(morganMiddleware); // log http requests
-    }
+    // }
     app.get('/health', (req, res) => {
         res.status(200).send('OK').end();
     }); // server health check
