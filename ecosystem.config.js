@@ -2,7 +2,7 @@ module.exports = {
     apps: [
         {
             name: 'connected-brain',
-            script: 'set PORT=3000&&start:product&&worker:product',
+            script: 'NODE_ENV=production PORT=3001 npm run start:all',
             watch: '.',
             env: {
                 NODE_ENV: 'development',
