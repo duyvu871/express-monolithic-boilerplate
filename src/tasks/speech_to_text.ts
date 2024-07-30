@@ -37,7 +37,7 @@ export default async function SpeechToText(data: ConvertToWavJob['job_data']) {
 		// console.log('Transcript:', transcripts_parse.sentences);
 
 		await SpeechToTextService.update_audit(data.id, {
-			cloudPath: upload_to_google_cloud?.storageLocation ?? '',
+			cloudPath: upload_to_google_cloud?.downloadURL ?? '',
 			// cloudPath: upload_to_firebase?.downloadURL ?? '',
 			audio: {
 				path: file_path,

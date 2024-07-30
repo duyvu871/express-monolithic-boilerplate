@@ -5,6 +5,25 @@ import { path as ffprobePath } from '@ffprobe-installer/ffprobe'
 ffmpeg.setFfprobePath(ffprobePath);
 
 export default class FileStorageService {
+	public static create_write_stream(
+		file_name: string,
+		action?: {
+			onOpen?: () => void,
+			onDrain?: (err: any) => void
+			onClose?: () => void,
+			onError?: (err: any) => void
+		}) {
+		const stream = fs.createWriteStream(file_name);
+		if (action) {
+			const {onOpen, onDrain, onClose, onError} = action;
+			if (onOpen) stream.on('open', onOpen);
+			if (onDrain) stream.on('drain', onDrain);
+			if (onClose) stream.on('close', onClose);
+			if (onError) stream.on('error', onError);
+		}
+		return stream;
+	}
+
 	// handle file error
 	public static handle_file_error(err: NodeJS.ErrnoException, file_name: string) {
 		if (err.code === 'ENOENT') {

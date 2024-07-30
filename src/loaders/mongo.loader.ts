@@ -41,7 +41,7 @@ export class DataBaseService {
 // const rankingDB = connectDB(DB_CONFIG.RANKING_DB_URL);
 const mongoLoader = async () => {
 	// return new DataBaseService();
-	return await mongoose.connect(`${env.MONGODB_URI}/${env.MONGODB_DB_NAME}?${env.MONGODB_DB_OPTIONS}`).then((res) => {
+	return await mongoose.connect(`${env.MONGODB_URI}/${env.MONGODB_DB_NAME}${env?.MONGODB_DB_OPTIONS ? `?${env.MONGODB_DB_OPTIONS}` : ""}`).then((res) => {
 		console.log("UserDB is connected");
 	}).catch((err) => {
 		console.log(err.message)

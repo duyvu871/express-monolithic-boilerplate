@@ -5,6 +5,7 @@ import S2t, { IS2t, IS2tDTO } from '@/models/speech_to_text.model';
 import ApiError from '@/helpers/ApiError';
 import { HttpStatusCode } from '@/helpers/http_status_code';
 import { MakeRequired } from '@/types/helper';
+import { Request } from 'express';
 // import { storage } from '@/configs/firebase';
 
 export default class SpeechToTextService {
@@ -51,6 +52,41 @@ export default class SpeechToTextService {
 		const createFileContent = FileStorageService.write_file(AppConfig.app_root + audit.audio.path, content);
 		return audit.audio.path;
 	}
+
+	public static create_audio_stream = (
+		req: Request,
+		audit:MakeRequired<Partial<Awaited<ReturnType<typeof SpeechToTextService.create_audit>>>, 'audio'>
+	) => {
+		return new Promise((resolve, reject) => {
+			const writeStream = FileStorageService.create_write_stream(
+				AppConfig.app_root + audit.audio.path,
+			);
+
+			const file = req.file as Express.Multer.File;
+			const buffer = file.buffer;
+			writeStream.write(buffer);
+			// event stream
+			writeStream.on("open", () => {
+				console.log('Start stream .... !!!!');
+				req.pipe(writeStream);
+			});
+			writeStream.on("drain", () => {
+				const written = parseInt(writeStream.bytesWritten.toString());
+				const total = parseInt(req.headers['content-length'] || '0');
+				const pWritten = ((written / total) * 100).toFixed(2);
+				console.log(`Processing  ...  ${pWritten}% done`);
+			});
+			writeStream.on("close", () => {
+				console.log('Processing  ...  100%');
+				resolve(audit.audio.path);
+			});
+			writeStream.on("error", (err) => {
+				console.error(err);
+				reject(err);
+			});
+		});
+	}
+
 	// get audit
 	public static async get_audit(id: string|ObjectId) {
 		const audit = await S2t.findById(id);
