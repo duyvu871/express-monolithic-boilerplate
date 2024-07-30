@@ -159,7 +159,7 @@ export default class CloudSpeech {
 		> {
 		try {
 			const storage = new Storage({
-				keyFilename: './services-config/connected-brain-c0fd067b322a.json',
+				keyFilename: './services-config/connected-brain-4c56687a38a8.json',
 			});
 			const bucket = storage.bucket(bucketName);
 			const destination = fileName ? `${specialPath}/${fileName}` : fileName;

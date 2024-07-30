@@ -12,7 +12,7 @@ console.log('auth routing loaded: ', '/api/v1/s2t');
 s2tRouter.route('/upload').post(
 	validateHeader(UserValidation.getUserHeaders),
 	authenticate,
-	upload({mimetype: /^audio\//}).single('file'),
+	upload({mimetype: /^audio\//}, {fileSize:1024 * 1024 * 100}).single('file'),
 	SpeechToTextController.upload_file);
 
 s2tRouter.route('/transcript/update').post(
