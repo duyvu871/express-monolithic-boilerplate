@@ -19,12 +19,12 @@ export default class AuthService {
 		return user;
 	}
 
-	static async RegisterWithEmailAndPassword(doc: {email: string, password: string; name: string}) {
-		const {email, password, name} = doc;
+	static async RegisterWithEmailAndPassword(doc: {email: string, password: string; username: string}) {
+		const {email, password, username} = doc;
 		if (await User.isEmailTaken(email)) {
 			throw new ApiError(HttpStatusCode.BadRequest, 'Email is already taken');
 		}
-		return await UserService.createUser({email, password, name});
+		return await UserService.createUser({email, password, username});
 	}
 
 	static async Logout(refreshToken: string) {

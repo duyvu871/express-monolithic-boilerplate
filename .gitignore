@@ -2,3 +2,5 @@
 /build
 /dist
 .env
+/storage/Assets/s2t
+/storage/Log

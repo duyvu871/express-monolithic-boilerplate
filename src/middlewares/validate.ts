@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { z, ZodError, ZodObject, ZodSchema } from 'zod';
 import { HttpStatusCode } from '@/helpers/http_status_code';
 
-type ValidateType = 'body' | 'headers' | 'params';
+type ValidateType = 'body' | 'headers' | 'query';
 
 export const validate = (type: ValidateType, schema: ZodObject<any>) => {
 	return (req: Request, res: Response, next: NextFunction) => {
@@ -36,5 +36,5 @@ export const validate = (type: ValidateType, schema: ZodObject<any>) => {
 
 export const validateBody = (schema: ZodObject<any>) => validate('body', schema);
 export const validateHeader = (schema: ZodObject<any>) => validate('headers', schema);
-export const validateParams = (schema: ZodObject<any>) => validate('params', schema);
+export const validateQuery = (schema: ZodObject<any>) => validate('query', schema);
 

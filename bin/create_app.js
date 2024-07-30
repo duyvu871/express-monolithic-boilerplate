@@ -2,6 +2,7 @@ import util from 'util';
 import path from 'path';
 import fs from 'fs';
 import child_process, { execSync } from 'child_process';
+import { preprocess } from 'zod';
 
 // Utility function to execute a command
 const exec = util.promisify(child_process.exec);
@@ -27,13 +28,13 @@ async function hasNPM() {
 }
 
 // Validate arguments
-
-if (process.argv.length < 3) {
-  console.error('Please provide the app name');
-  console.log('Usage: create_app <app_name>');
-  console.log('Example: npx create_app myapp');
-  process.exit(1);
-}
+console.log(process.argv);
+// if (process.argv.length < 3) {
+//   console.error('Please provide the app name');
+//   console.log('Usage: create_app <app_name>');
+//   console.log('Example: npx create_app myapp');
+//   process.exit(1);
+// }
 
 //Define constants
 const ownPath = process.cwd(); // Current working directory
@@ -58,11 +59,11 @@ try {
 async function setup() {
     try {
         // Clone the repository
-        console.log(`Cloning the repository from repo: ${repo}`);
-        await runCommand(`git clone --depth1 ${repo} ${folderName}`).then(() => {
-            console.log('✅ Repository cloned');
-            console.log('');
-        });
+        // console.log(`Cloning the repository from repo: ${repo}`);
+        // await runCommand(`git clone --depth1 ${repo} ${folderName}`).then(() => {
+        //     console.log('✅ Repository cloned');
+        //     console.log('');
+        // });
 
         // Change the current working directory
         process.chdir(appPath);

@@ -1,11 +1,18 @@
 import { HttpStatusCode } from '@/helpers/http_status_code';
-import User, { IUser, IUserInputDTO, IUserMethods, IUserModel, userSchemaZod } from '@/models/user.model';
+import User, {
+    IUser,
+    IUserDocument,
+    IUserInputDTO,
+    IUserMethods,
+    IUserModel,
+    userSchemaZod,
+} from '@/models/user.model';
 import ApiError, { ZodErrorResponse } from '@/helpers/ApiError';
 import { PaginateResult } from '@/models/plugins/paginate.plugin';
-import { Document, ObjectId, Query } from 'mongoose';
+import { Document, ObjectId, Query, Types } from 'mongoose';
 import { MakeManyOptional } from '@/types/helper';
 
-export type UserServiceResponse = NonNullable<IUser & IUserMethods>
+export type UserServiceResponse = NonNullable<IUserDocument & IUserMethods>
 
 export default class UserService {
     /**
@@ -32,7 +39,7 @@ export default class UserService {
     static async queryUser(
       query: Record<string, string>,
       options: Record<'sortBy'|'limit'|'page', string>
-    ): Promise<PaginateResult<IUser>> {
+    ): Promise<PaginateResult<IUserDocument>> {
         return await User.paginate(query, options);
     }
 

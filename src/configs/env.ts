@@ -20,6 +20,8 @@ const parseErrorMessage = (message: string) => {
 // Define the schema as an object with all of the env
 // variables and their types
 const envSchema = z.object({
+	// server
+	// PORT: z.union([z.string(), z.number()]).refine((port) => parseInt(port.toString()) > 0, "Invalid port number"),
 	// jwt
 	JWT_SECRET_KEY: z.string(),
 	JWT_REFRESH_EXPIRATION: z.string().refine((expiration) => parseInt(expiration) > 0, "Invalid expiration"),
@@ -29,7 +31,8 @@ const envSchema = z.object({
 	PASSWORD_RESET_DELAY: z.string().refine((delay) => parseInt(delay) > 0, "Invalid delay"),
 	// mongodb
 	MONGODB_URI: z.string().url(),
-	MONGODB_DB_NAME: z.string().optional().default('Database'),
+	MONGODB_DB_NAME: z.string().optional().default('connected-brain'),
+	MONGODB_DB_OPTIONS: z.string().optional().default(''),
 	// redis
 	REDIS_SECRET_KEY: z.string(),
 	REDIS_HOST: z.string(),
@@ -60,6 +63,12 @@ try {
 		process.exit(1);
 	}
 	env = process.env as any;
+}
+
+export const loadEnv = (envData: any) => {
+	if (envData) {
+		env = envSchema.parse(envData);
+	}
 }
 
 // Export the result so we can use it in the project

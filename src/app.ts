@@ -6,22 +6,29 @@ import path from 'path';
 import dotenv from 'dotenv';
 import * as console from "node:console";
 import AppConfig from "@/configs/app.config";
-import env from '@/configs/env';
+import env, { loadEnv } from '@/configs/env';
+import * as process from 'node:process';
 
 async function startServer() {
-    const listenPort = AppConfig.app_port;
-    const isProduction = env.NODE_ENV === 'production';
-    console.log(`environment: ${process.env.NODE_ENV}`);
-    const app = express();
-    dotenv.config({
+    const isProduction = process.env.NODE_ENV === 'production';
+    const DOTENV = dotenv.config({
         path: path.resolve(__dirname, isProduction ? '../.env' : '../.env')
     }); // Load environment variables from .env file
-    app.use(helmet()); // Secure your app by setting various HTTP headers
-    Loaders({ expressApp: app }).then(() => {
-        app.listen(listenPort, () => {
-            console.log(`Server is running on http://localhost:${listenPort}`);
-        });
+    // console.log(process.env);
+    loadEnv(DOTENV.parsed);
+    const listenPort = process.env.PORT;
+    console.log(`listenPort: ${listenPort}`);
+    console.log(`environment: ${process.env.NODE_ENV}`);
+
+    const app = express();
+
+    app.use(helmet({
+        crossOriginResourcePolicy: false,
+    })); // Secure your app by setting various HTTP headers
+    app.listen(listenPort, () => {
+        console.log(`Server is running on http://localhost:${listenPort}`);
     });
+    await Loaders({ expressApp: app });
 }
 
 startServer().then(() => console.log('server started')).catch((err) => console.error(err));

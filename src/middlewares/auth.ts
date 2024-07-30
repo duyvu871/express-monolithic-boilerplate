@@ -1,11 +1,12 @@
 import ApiError from '@/helpers/ApiError';
 import { HttpStatusCode } from '@/helpers/http_status_code';
-import { roleRights } from '@/configs/roles';
-import { validateRole } from '@/helpers/validate_role';
+// import { roleRights } from '@/configs/roles';
+// import { validateRole } from '@/helpers/validate_role';
 import { NextFunction, Request, Response } from 'express';
 import TokenService from '@/services/token.service';
 import AsyncMiddleware from '@/helpers/waiter.helper';
 import JwtService from '@/services/jwt.service';
+import env from '@/configs/env';
 
 export const authenticate = AsyncMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -15,9 +16,9 @@ export const authenticate = AsyncMiddleware.asyncHandler(async (req: Request, re
 			return;
 		}
 		const token = reqHeaderAuthToken.replace('Bearer ', '');
+		// logger.info(`Token: ${token}`);
 		// verify token
-		const tokenService = new TokenService();
-		const tokenData = await tokenService.verifyToken(token);
+		const tokenData = await TokenService.verifyToken(token, env.JWT_SECRET_KEY);
 		// check if token is blacklisted
 		if (tokenData.blacklisted) {
 			ApiError.throw(HttpStatusCode.Unauthorized, 'Unauthorized - token blacklisted');
@@ -31,6 +32,8 @@ export const authenticate = AsyncMiddleware.asyncHandler(async (req: Request, re
 		// set token data to request
 		// @ts-ignore
 		req.token = tokenData.token;
+		// @ts-ignore
+		req.user = tokenData.user;
 		next();
 	} catch (error: any) {
 		res.status(error.statusCode || 500).send({ message: error.message });
